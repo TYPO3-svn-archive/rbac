@@ -1,0 +1,422 @@
+####################################################
+# Static TS template for rbac 
+#
+# @author Michael Knoll <mimi@kaktusteam.de>
+# @package rbac
+# @subpackage Typoscript
+####################################################
+
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_extlist/Configuration/TypoScript/setup.txt">
+
+
+
+# Remove record type from fe_users object to make it load any user from database
+config.tx_extbase.persistence.classes {
+    Tx_Extbase_Domain_Model_FrontendUser {
+        mapping.recordType >
+    }
+} 
+
+
+
+plugin.tx_rbac.settings {
+
+    extlist {
+    
+        lists {
+        
+            #############################################
+            # Configuration for list of actions
+            #############################################
+            adminActionList {
+            
+                backendConfig < plugin.tx_ptextlist.prototype.backend.typo3
+                backendConfig {
+        
+                    tables (
+                        tx_rbac_domain_model_action action
+                    )
+                    
+                }
+        
+                fields {
+                    name {
+                        table = action
+                        field = name
+                        isSortable = 1
+                    }
+        
+                    description {
+                        table = action
+                        field = description
+                    }
+                    
+                }
+        
+                pager {
+                    pagerConfigs {
+                        default {
+                            enabled = 1
+                            pagerClassName = Tx_PtExtlist_Domain_Model_Pager_DefaultPager
+                            templatePath = EXT:pt_extlist/Resources/Private/Templates/Pager/second.html
+                            
+                            showNextLink = 1
+                            showPreviousLink = 1
+                            showFirstLink = 1
+                            showLastLink = 1
+                        }
+                    }
+                }
+        
+                columns {
+                    
+                    10 {
+                        columnIdentifier = nameColumn
+                        label = Name
+                        fieldIdentifier = name
+                        isSortable = 1
+                        sorting = name
+                    }
+        
+                    11 {
+                        label = Description
+                        columnIdentifier = descriptionColumn
+                        fieldIdentifier = description
+                        isSortable = 0
+                    }
+                    
+                }
+                
+            }
+                   
+                   
+                    
+            #############################################
+            # Configuration for list of extensions
+            #############################################
+            adminExtensionList < plugin.tx_rbac.settings.extlist.lists.adminActionList
+            adminExtensionList {
+                
+                backendConfig.tables = tx_rbac_domain_model_extension extension
+                
+                fields >
+                fields {
+                    
+                    name {
+                        table = extension
+                        field = name
+                        isSortable = 1
+                    }
+                    
+                }
+                
+                columns >
+                columns {
+                
+                    10 {
+                        columnIdentifier = nameColumn
+                        label = Name
+                        fieldIdentifier = name
+                        isSortable = 1
+                        sorting = name
+    
+                    }
+                    
+                }
+                
+            }
+            
+            
+            
+            #############################################
+            # Configuration for list of domains
+            #############################################
+            adminDomainList < plugin.tx_rbac.settings.extlist.lists.adminActionList
+            adminDomainList {
+                
+                backendConfig.tables = tx_rbac_domain_model_domain domain
+                
+                fields >
+                fields {
+                    
+                    name {
+                        table = domain
+                        field = name
+                        isSortable = 1
+                    }
+                    
+                }
+                
+                columns >
+                columns {
+                
+                    10 {
+                        columnIdentifier = nameColumn
+                        label = Name
+                        fieldIdentifier = name
+                        isSortable = 1
+                        sorting = name
+    
+                    }
+                    
+                }
+                
+            }
+            
+            
+            
+            #############################################
+            # Configuration for list of domains
+            #############################################
+            adminObjectList < plugin.tx_rbac.settings.extlist.lists.adminActionList
+            adminObjectList {
+                
+                backendConfig.tables = tx_rbac_domain_model_object object
+                
+                fields >
+                fields {
+                    
+                    name {
+                        table = object
+                        field = name
+                        isSortable = 1
+                    }
+                    
+                }
+                
+                columns >
+                columns {
+                
+                    10 {
+                        columnIdentifier = nameColumn
+                        label = Name
+                        fieldIdentifier = name
+                        isSortable = 1
+                        sorting = name
+    
+                    }
+                    
+                }
+                
+            }
+            
+            
+            
+            #############################################
+            # Configuration for list of users
+            #############################################
+            adminUserList < plugin.tx_rbac.settings.extlist.lists.adminActionList
+            adminUserList {
+                
+                backendConfig.tables = tx_rbac_domain_model_user user, fe_users
+                
+                # Implement me!
+                backendConfig.baseWhereClause = fe_users.uid = user.fe_user
+                
+                
+                fields >
+                fields {
+                    
+                    name {
+                        table = fe_users
+                        field = username
+                        isSortable = 1
+                    }
+                    
+                    uid {
+                        table = user
+                        field = uid
+                        isSortable = 0
+                    }
+                    
+                }
+                
+                columns >
+                columns {
+                
+                    10 {
+                        columnIdentifier = nameColumn
+                        label = Name
+                        fieldIdentifier = name
+                        isSortable = 1
+                        sorting = name
+    
+                    }
+                    
+                    20 {
+                        columnIdentifier = editColumn
+                        label = Edit
+                        fieldIdentifier = uid
+                        renderObj = COA
+                        renderObj {
+                            10 = TEXT
+                            10.value = Edit
+                            10.typolink.parameter = 5
+                            10.typolink.additionalParams.dataWrap = &tx_rbac_pi1[controller]=Admin&tx_rbac_pi1[action]=editUser&tx_rbac_pi1[user]={field:uid}
+                        }
+                        
+                    }   
+                    
+                }
+                
+            }
+            
+            
+            
+            #############################################
+            # Configuration for list of privileges
+            #############################################
+            adminPrivilegeList < plugin.tx_rbac.settings.extlist.lists.adminActionList
+            adminPrivilegeList {
+                
+                backendConfig.tables = tx_rbac_domain_model_privilege privilege
+                
+                fields >
+                fields {
+                    
+                    name {
+                        table = privilege
+                        field = name
+                        isSortable = 1
+                    }
+                    
+                }
+                
+                columns >
+                columns {
+                
+                    10 {
+                        columnIdentifier = nameColumn
+                        label = Name
+                        fieldIdentifier = name
+                        isSortable = 1
+                        sorting = name
+    
+                    }
+                    
+                }
+                
+            }
+            
+            
+            
+            #############################################
+            # Configuration for list of roles
+            #############################################
+            adminRoleList < plugin.tx_rbac.settings.extlist.lists.adminActionList
+            adminRoleList {
+                
+                backendConfig.tables = tx_rbac_domain_model_role role
+                
+                fields >
+                fields {
+                    
+                    name {
+                        table = role
+                        field = name
+                        isSortable = 1
+                    }
+                    
+                }
+                
+                columns >
+                columns {
+                
+                    10 {
+                        columnIdentifier = nameColumn
+                        label = Name
+                        fieldIdentifier = name
+                        isSortable = 1
+                        sorting = name
+                    }
+                    
+                }
+                
+            }
+            
+            
+            
+            #############################################
+            # Configuration for list of user-roles
+            #############################################
+            adminUserRoleList < plugin.tx_rbac.settings.extlist.lists.adminActionList
+            adminUserRoleList {
+                
+                backendConfig.tables (
+                    tx_rbac_domain_model_user user
+                    JOIN tx_rbac_user_role_mm userRoleMm ON userRoleMm.uid_local = user.uid
+                    JOIN tx_rbac_domain_model_role role ON role.uid = userRoleMm.uid_foreign
+                )
+                
+                fields >
+                fields {
+                    
+                    userUid {
+                        table = user
+                        field = uid
+                        isSortable = 1
+                    }
+                    
+                    
+                    roleUid {
+                        table = role
+                        field = uid
+                        isSortable = 1
+                    }
+                    
+                    name {
+                        table = role
+                        field = name
+                        isSortable = 1
+                    }
+                    
+                }
+                
+                columns >
+                columns {
+                
+                    10 {
+                        columnIdentifier = nameColumn
+                        label = Name
+                        fieldIdentifier = name
+                        isSortable = 1
+                        sorting = name
+                    }
+                    
+                    20 {
+                        columnIdentifier = removeColumn
+                        label = Remove
+                        fieldIdentifier = userUid, roleUid
+                        renderObj = COA
+                        renderObj {
+                            10 = TEXT
+                            10.value = Remove
+                            10.typolink.parameter = 5
+                            10.typolink.additionalParams.dataWrap = &tx_rbac_pi1[controller]=Admin&tx_rbac_pi1[action]=removeRoleFromUser&tx_rbac_pi1[user]={field:userUid}&tx_rbac_pi1[role]={field:roleUid}
+                        }
+                    }
+                    
+                }
+                
+                filters {
+                    filterbox1 {
+                        filterConfigs {
+                            10 {
+                                partialPath = noPartialNeeded
+                                filterClassName = Tx_Rbac_Extlist_Filters_RolesFilter
+                                filterIdentifier = rolesFilter
+                                ## fieldIdentifier is not used but must be set to existing field!
+                                fieldIdentifier = userUid
+                            }
+                        }
+                    }
+                }
+                
+                
+            }
+        
+        }
+    
+    }
+
+}

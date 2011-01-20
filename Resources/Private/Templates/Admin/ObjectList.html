@@ -1,0 +1,15 @@
+Objects:
+
+<div class="tx-rbac-action-list">
+    <table>
+	     <f:for each="{objectList}" key="rowIndex" as="object">
+	         <tr>
+	             <f:for each="{object}" key="cellIndex" as="cell">
+	                 <td>{cell.value}</td>
+	             </f:for>
+	         </tr>      
+	     </f:for>
+     </table>    
+</div>
+
+<f:link.action action="index">Back to RBAC index page</f:link.action>

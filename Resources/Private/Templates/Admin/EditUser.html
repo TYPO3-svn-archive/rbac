@@ -1,0 +1,36 @@
+<f:renderFlashMessages /><br />
+
+Edit user properties: {user.uid}<br /><br />
+
+Roles for user:<br />
+
+<f:if condition="{userRoles}">
+    <f:then>
+		<div class="tx-rbac-userroles-list">
+		    <table>
+		         <f:for each="{userRoles}" key="rowIndex" as="role">
+		             <tr>
+		                 <f:for each="{role}" key="cellIndex" as="cell">
+		                     <td>{cell}</td>
+		                 </f:for>
+		             </tr>      
+		         </f:for>
+		     </table>    
+		</div>
+	</f:then>
+	<f:else>
+	   <div class="tx-rbac-emptylist">No roles are associated with this user yet.</div>
+	</f:else>
+</f:if><br /><br />
+
+
+
+<f:form method="post" controller="Admin" action="addRoleToUser" name="addRoleToUser">
+    <f:form.hidden name="user" value="{user.uid}" />
+    <f:form.select name="role" options="{roles}" optionValueField="uid" optionLabelField="name"/><br/><br />
+    <f:form.submit value="Add role" />
+</f:form><br /><br />
+
+
+
+<f:link.action action="index">Back to RBAC index page</f:link.action>

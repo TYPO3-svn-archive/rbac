@@ -1,0 +1,15 @@
+Users:
+
+<div class="tx-rbac-action-list">
+    <table>
+	     <f:for each="{userList}" key="rowIndex" as="user">
+	         <tr>
+	             <f:for each="{user}" key="cellIndex" as="cell">
+	                 <td>{cell}</td>
+	             </f:for>
+	         </tr>      
+	     </f:for>
+     </table>    
+</div>
+
+<f:link.action action="index">Back to RBAC index page</f:link.action>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+    <meta type="array">
+        <description>Context Sensitive Help (CSH) for table tx_rbac_domain_model_privilege</description>
+        <type>CSH</type>
+        <csh_table>tx_rbac_domain_model_privilege</csh_table>
+    </meta>
+    <data type="array">
+        <languageKey index="default" type="array">
+			<label index="name.description">name</label>
+			<label index="description.description">description</label>
+			<label index="is_singular.description">isSingular</label>
+			<label index="actions.description">actions</label>
+		</languageKey>
+    </data>
+</T3locallang>

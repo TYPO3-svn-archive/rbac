@@ -1,0 +1,16 @@
+Domains:
+
+<div class="tx-rbac-action-list">
+    <table>
+	     <f:for each="{domainList}" key="rowIndex" as="domain">
+	         <tr>
+	             <f:for each="{domain}" key="cellIndex" as="cell">
+	                 <td>{cell.value}</td>
+	             </f:for>
+	         </tr>      
+	     </f:for>
+     </table>    
+</div>
+
+
+<f:link.action action="index">Back to RBAC index page</f:link.action>

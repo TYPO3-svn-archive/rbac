@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'rbac'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_rbac_domain_model_role">Role</label>
+			<label index="tx_rbac_domain_model_role.name">Name</label>
+			<label index="tx_rbac_domain_model_role.description">Description</label>
+			<label index="tx_rbac_domain_model_role.importance">Importance</label>
+			<label index="tx_rbac_domain_model_role.users">Users</label>
+			<label index="tx_rbac_domain_model_user">User</label>
+			<label index="tx_rbac_domain_model_user.roles">Roles</label>
+			<label index="tx_rbac_domain_model_action">Action</label>
+			<label index="tx_rbac_domain_model_action.name">Name</label>
+			<label index="tx_rbac_domain_model_action.description">Description</label>
+			<label index="tx_rbac_domain_model_privilege">Privilege</label>
+			<label index="tx_rbac_domain_model_privilege.name">Name</label>
+			<label index="tx_rbac_domain_model_privilege.description">Description</label>
+			<label index="tx_rbac_domain_model_privilege.is_singular">Is Singular</label>
+			<label index="tx_rbac_domain_model_privilege.actions">Actions</label>
+			<label index="tx_rbac_domain_model_object">Object</label>
+			<label index="tx_rbac_domain_model_object.name">Name</label>
+			<label index="tx_rbac_domain_model_object.description">Description</label>
+			<label index="tx_rbac_domain_model_object.domains">Domains</label>
+			<label index="tx_rbac_domain_model_object.extension">Extension</label>
+			<label index="tx_rbac_domain_model_domain">Domain</label>
+			<label index="tx_rbac_domain_model_domain.name">Name</label>
+			<label index="tx_rbac_domain_model_domain.description">Description</label>
+			<label index="tx_rbac_domain_model_domain.is_singular">Is Singular</label>
+			<label index="tx_rbac_domain_model_domain.objects">Objects</label>
+			<label index="tx_rbac_domain_model_domain.extension">Extension</label>
+			<label index="tx_rbac_domain_model_privilegeondomain">Privilege On Domain</label>
+			<label index="tx_rbac_domain_model_privilegeondomain.is_allowed">Is Allowed</label>
+			<label index="tx_rbac_domain_model_privilegeondomain.privilege">Privilege</label>
+			<label index="tx_rbac_domain_model_privilegeondomain.role">Role</label>
+			<label index="tx_rbac_domain_model_privilegeondomain.domain">Domain</label>
+			<label index="tx_rbac_domain_model_extension">Extension</label>
+			<label index="tx_rbac_domain_model_extension.name">Name</label>
+			<label index="tx_rbac_domain_model_extension.domains">Domains</label>
+			<label index="tx_rbac_domain_model_extension.objects">Objects</label>
+		</languageKey>
+	</data>
+</T3locallang>

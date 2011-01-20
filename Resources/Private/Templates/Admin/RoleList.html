@@ -1,0 +1,15 @@
+Roles:
+
+<div class="tx-rbac-action-list">
+    <table>
+	     <f:for each="{roleList}" key="rowIndex" as="role">
+	         <tr>
+	             <f:for each="{role}" key="cellIndex" as="cell">
+	                 <td>{cell.value}</td>
+	             </f:for>
+	         </tr>      
+	     </f:for>
+     </table>    
+</div>
+
+<f:link.action action="index">Back to RBAC index page</f:link.action>

@@ -1,0 +1,15 @@
+Extensions:
+
+<div class="tx-rbac-action-list">
+    <table>
+	     <f:for each="{extensionList}" key="rowIndex" as="extension">
+	         <tr>
+	             <f:for each="{extension}" key="cellIndex" as="cell">
+	                 <td>{cell.value}</td>
+	             </f:for>
+	         </tr>      
+	     </f:for>
+     </table>    
+</div>
+
+<f:link.action action="index">Back to RBAC index page</f:link.action>
