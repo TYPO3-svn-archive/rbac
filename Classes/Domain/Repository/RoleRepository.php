@@ -32,6 +32,19 @@
  */
 class Tx_Rbac_Domain_Repository_RoleRepository extends Tx_Extbase_Persistence_Repository {
 	
+	/**
+	 * Adds a role if it does not exist or updates it if it does exist
+	 *
+	 * @param Tx_Rbac_Domain_Model_Role $role
+	 */
+	public function addIfNotExists(Tx_Rbac_Domain_Model_Role $role) {
+		if (!(count($this->findByName($role->getName())) > 0)) {
+			$this->add($role);
+		} else {
+			$this->update($role);
+		}
+	}
+	
 }
  
 ?>

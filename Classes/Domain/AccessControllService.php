@@ -30,7 +30,7 @@
  * @package Domain
  * @author Michael Knoll <mimi@kaktusteam.de>
  */
-class Tx_Rbac_Domain_AccessControllService {
+class Tx_Rbac_Domain_AccessControllService implements Tx_PtExtlist_Domain_StateAdapter_SessionPersistableInterface {
 
     /**
      * Holds an array of settings for rbac
@@ -51,26 +51,84 @@ class Tx_Rbac_Domain_AccessControllService {
     
     
     /**
-     * TODO Constructor creates repository, what should be done in 
-     * a factory!
+     * Holds an array of cached access rights which is
+     * persisted to session after access controll service shuts down.
+     * 
+     * array has structure
+     * array( $user => array( $object => array ($action => true/false) ) ) so you get cached access right via
+     * $this->accessCache[$user][$object][$action]
+     *
+     * @var array
      */
-    public function __construct() {
-    	// At the moment, we use this repository as a default repository (overwritten by injector for testing etc.)
-    	// TODO use factory here!
-    	$this->repository = t3lib_div::makeInstance(Tx_Rbac_Domain_Repository_UserRepository);
-    }
+    protected $accessCache;
+    
+    
+	
+	/**
+	 * @see Tx_PtExtlist_Domain_StateAdapter_IdentifiableInterface::getObjectNamespace()
+	 *
+	 * @return String
+	 */
+	public function getObjectNamespace() {
+		return 'Tx_Rbac_Domain_AccessControllService';
+	}
+	
+	
+	
+	/**
+	 * @see Tx_PtExtlist_Domain_StateAdapter_SessionPersistableInterface::injectSessionData()
+	 *
+	 * @param array $sessionData
+	 */
+	public function injectSessionData(array $sessionData = array()) {
+		$this->accessCache = $sessionData['accessCache'];
+	}
+	
+	
+	
+	/**
+	 * @see Tx_PtExtlist_Domain_StateAdapter_SessionPersistableInterface::persistToSession()
+	 *
+	 */
+	public function persistToSession() {
+		return array('accessCache' => $this->accessCache);
+	}
     
     
     
     /**
      * Returns true, if a given user has access to given object's action
      *
-     * @param int $userUid Uid of user to request access rights for
+     * @param int $userUid Uid of RBAC! user (not fe_user!!!) to request access rights for
      * @param string $object Object to request access rights for
      * @param string $action Action to request access rights for
      * @return bool True, if given user has access to given object and action
      */
     public function hasAccess($user, $object, $action) {
+        if (!isset($this->accessCache[$user][$object][$action])) {
+        	// We have no cached access right for requested user, object and action so we create one
+        	$this->accessCache[$user][$object][$action] = $this->getAccessRightFromDatabase($user,$object,$action);
+        }
+        
+        // We have cached access right, so we can return from cache
+        if ($this->accessCache[$user][$object][$action]) {
+            return TRUE;	
+        } else {
+        	return FALSE;
+        }
+    }
+    
+    
+    
+    /**
+     * Executes a SQL-query to gather access-information from database
+     *
+     * @param int $userUid Uid of RBAC! user (not fe_user!!!) to request access rights for
+     * @param string $object Object to request access rights for
+     * @param string $action Action to request access rights for
+     * @return bool True, if given user has access to given object and action
+     */
+    protected function getAccessRightFromDatabase($user, $object, $action) {
     	$sql = "
             SELECT is_allowed, t2.name AS privilege, t2.is_singular AS is_privilege_singular, 
                    t4.name AS action, t5.name AS domain, t5.is_singular AS is_domain_singular, 
@@ -99,11 +157,11 @@ class Tx_Rbac_Domain_AccessControllService {
         $result = $query->statement($sql)->execute();
         
         if (count($result) > 0) {
-        	foreach($result as $row) {
-        	   if ($row['is_allowed'] == 1) {
-        	       return true;
-        	   }
-        	}
+            foreach($result as $row) {
+               if ($row['is_allowed'] == 1) {
+                   return true;
+               }
+            }
         }
         return false;
     }

@@ -5,10 +5,10 @@ Tx_Extbase_Utility_Extension::configurePlugin(
 	$_EXTKEY,
 	'Pi1',
 	array(
-		'Admin' => 'index, actionList, domainList, userList, extensionList, objectList, privilegeList, roleList, editUser, addRoleToUser, removeRoleFromUser'
+		'Admin' => 'index, actionList, domainList, userList, extensionList, objectList, privilegeList, roleList, editUser, addRoleToUser, removeRoleFromUser, setupRbac, addRbacUser'
 	),
 	array(
-		'Admin' => 'index, actionList, domainList, userList, extensionList, objectList, privilegeList, roleList, editUser, addRoleToUser, removeRoleFromUser'
+		'Admin' => 'index, actionList, domainList, userList, extensionList, objectList, privilegeList, roleList, editUser, addRoleToUser, removeRoleFromUser, setupRbac, addRbacUser'
 	)
 );
 

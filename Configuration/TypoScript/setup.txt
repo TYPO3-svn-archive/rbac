@@ -418,5 +418,150 @@ plugin.tx_rbac.settings {
         }
     
     }
+    
+    
+    
+    ######################################################
+    # Holds RBAC configuration for this extension
+    ######################################################
+    rbac {
+    
+        ## Actions required for RBAC
+        actions {
+            view {
+                description = View action   
+            }
+            
+            create {
+                description = Create action 
+            }
+            
+            update {
+                description = Update action 
+            }
+            
+            delete {
+                description = Delete action 
+            }
+            
+            edit {
+                description = Edit action
+            }
+        }
+        
+        
+        
+        ## Objects required for RBAC
+        objects {
+        
+            Action {
+                description = Action in RBAC
+            }
+            
+            Object {
+                description = Object in RBAC
+            }
+            
+            Domain {
+                description = Domain in RBAC
+            }
+            
+            User {
+                description = User in RBAC
+            }
+            
+            Privilege {
+                description = Privilege in RBAC
+            }
+            
+            Role {
+                description = Role in RBAC
+            }
+            
+            Extension {
+                description = Extension in RBAC
+            }
+            
+        }
+        
+        
+        
+        ## Domains available in RBAC
+        domains {
+            
+            tx_rbac_all_objects {
+                isSingular = 0
+                objects = Action, Object, Domain, User, Privilege, Role, Extension
+            }
+            
+            tx_rbac_action {
+                isSingular = 1
+                objects = Action
+            }
+            
+            tx_rbac_object {
+                isSingular = 1
+                objects = Object
+            }
+            
+            tx_rbac_domain {
+                isSingular = 1
+                objects = Domain
+            }
+            
+            tx_rbac_user {
+                isSingular = 1
+                objects = User
+            }
+            
+            tx_rbac_privilege {
+                isSingular = 1
+                objects = Privilege
+            }
+            
+            tx_rbac_role {
+                isSingular = 1
+                objects = Role
+            }
+            
+            tx_rbac_extension {
+                isSingular = 1
+                objects = Extension
+            }
+        
+        }
+        
+        
+        
+        ## Privileges available in RBAC
+        privileges {
+            
+            tx_rbac_all_actions {
+                isSingular = 0
+                actions = view, create, update, delete, edit
+            }
+            
+        }
+        
+        
+        
+        ## Roles available in RBAC
+        roles {
+            
+            rbag_administrator {
+                description = Role for all administrators having full access to all functions on all objects
+                importance = 100
+                privileges {
+                    10 {
+                        privilege = tx_rbac_all_actions
+                        domain = tx_rbac_all_objects 
+                        isAllowed = 1
+                    }
+                }
+            } 
+            
+        }
+    
+    }
 
 }

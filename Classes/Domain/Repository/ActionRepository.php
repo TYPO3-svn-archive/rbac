@@ -44,6 +44,20 @@ class Tx_Rbac_Domain_Repository_ActionRepository extends Tx_Extbase_Persistence_
 		else throw new Exception('More than one action found by name. This should not be! 1295024085');
 	}
 	
+	
+	
+	/**
+	 * Adds an action to repository if it does not exist
+	 *
+	 * @param Tx_Rbac_Domain_Model_Action $action
+	 */
+	public function addIfNotExists(Tx_Rbac_Domain_Model_Action $action) {
+		if (!count($this->findByName($action->getName())) > 0) {
+			// No action with this name exists
+			$this->add($action);
+		}
+	}
+	
 }
  
 ?>

@@ -72,7 +72,7 @@ class Tx_Rbac_ViewHelpers_HasAccessViewHelper extends Tx_Fluid_Core_ViewHelper_A
 	 * @return string Rendered hasAccess ViewHelper
 	 */
 	public function render(Tx_Rbac_Domain_Model_User $user = null, $object, $action) {
-		$accessControllService = new Tx_Rbac_Domain_AccessControllService();
+		$accessControllService = Tx_Rbac_Domain_AccessControllServiceFactory::getInstance();
 		if (!is_null($user) && $accessControllService->hasAccess($user->getUid(), $object, $action)) {
 			return $this->renderThenChild();
 		} else {

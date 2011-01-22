@@ -39,12 +39,43 @@ class Tx_Rbac_Domain_Repository_ObjectRepository extends Tx_Extbase_Persistence_
 	 * @param string $name
 	 * @return Tx_Rbac_Domain_Model_Object
 	 */
-	public function findByExtensionAndName(Tx_Rbac_Domain_Model_Extension $extension, $name) {
+	public function findSingleInstanceByExtensionAndName(Tx_Rbac_Domain_Model_Extension $extension, $name) {
 		$query = $this->createQuery();
 		$query->matching($query->logicalAnd($query->equals('extension', $extension), $query->equals('name', $name)));
 		$result = $query->execute();
 		if (count($result) > 1) throw new Exception('More than one object found for query settings. This should not be! 1295024084');
 		return count($result) == 1 ? $result[0] : null;
+	}
+	
+	
+	
+	/**
+	 * Adds an object to repository if it does not exist yet
+	 *
+	 * @param Tx_Rbac_Domain_Model_Object $object
+	 */
+	public function addIfNotExists(Tx_Rbac_Domain_Model_Object $object) {
+		if (!($this->findByExtensionAndName($object->getExtension(), $object->getName())) > 0) {
+			$this->add($object);
+		} else {
+			$this->update($object);
+		}
+	}
+	
+	
+	
+	/**
+	 * Finds objects by given extension and object name
+	 *
+	 * @param Tx_Rbac_Domain_Model_Extension $extension
+	 * @param string $objectName
+	 * @return array<Tx_Rbac_Domain_Model_Object> Array of Tx_Rbac_Domain_Model_Object
+	 */
+	public function findByExtensionAndName(Tx_Rbac_Domain_Model_Extension $extension, $objectName) {
+		$query = $this->createQuery();
+		$query->getQuerySettings()->setRespectStoragePage(FALSE);
+		$query->matching($query->logicalAnd($query->equals('extension', $extension), $query->equals('name', $objectName)));
+		return $query->execute();
 	}
 	
 }

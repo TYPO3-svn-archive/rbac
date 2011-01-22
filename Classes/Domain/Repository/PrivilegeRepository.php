@@ -44,6 +44,21 @@ class Tx_Rbac_Domain_Repository_PrivilegeRepository extends Tx_Extbase_Persisten
 		else throw new Exception('More than one privilege found by name. This should not be! 1295024086');
 	}
 	
+	
+	
+	/**
+	 * Adds an instance of privilege to repository if it does not exist
+	 *
+	 * @param Tx_Rbac_Domain_Model_Privilege $privilege
+	 */
+	public function addIfNotExists(Tx_Rbac_Domain_Model_Privilege $privilege) {
+		if (!(count($this->findByName($privilege->getName())) > 0)) {
+			$this->add($privilege);
+		} else {
+			$this->update($privilege);
+		}
+	}
+	
 }
  
 ?>

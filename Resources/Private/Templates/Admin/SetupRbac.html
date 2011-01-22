@@ -1,0 +1,14 @@
+Rbac settings have been imported!<br/><br/>
+
+You should now create a first RBAC user (make sure to have created at least one fe_user before!):
+
+<f:form name="addRbacUser" controller="Admin" action="addRbacUser" method="post">
+    <label for="feUser">Frontend-User:</label><br/>
+    <f:form.select name="feUser" options="{feUsers}" optionValueField="uid" optionLabelField="username" /><br/><br/>
+    
+    <label for="role">Role:</label><br/>
+    <f:form.select name="role" options="{roles}" optionValueField="uid" optionLabelField="name" /><br/><br/>
+    
+    <f:form.submit value="Add user" />
+
+</f:form>

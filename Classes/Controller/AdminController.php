@@ -31,6 +31,54 @@
  */
 class Tx_Rbac_Controller_AdminController extends Tx_Rbac_Controller_AbstractController {
 
+    /**
+     * Holds an instance of rbac extension repository
+     *
+     * @var Tx_Rbac_Domain_Repository_ExtensionRepository
+     */
+    protected $extensionRepository;
+    
+    
+    
+    /**
+     * Holds an instance of rbac user repository
+     *
+     * @var Tx_Rbac_Domain_Repository_UserRepository
+     */
+    protected $userRepository;
+    
+    
+    
+    /**
+     * Holds an instance of fe user repository
+     *
+     * @var Tx_Extbase_Domain_Repository_FrontendUserRepository
+     */
+    protected $feUserRepository;
+    
+    
+    
+    /**
+     * Holds an instance of rbac user repository
+     *
+     * @var Tx_Rbac_Domain_Repository_RoleRepository
+     */
+    protected $roleRepository;
+    
+    
+    
+    /**
+     * Initializes controller before actions are executed
+     */
+    protected function initializeAction() {
+        $this->extensionRepository = t3lib_div::makeInstance('Tx_Rbac_Domain_Repository_ExtensionRepository');
+        $this->userRepository = t3lib_div::makeInstance('Tx_Rbac_Domain_Repository_UserRepository');
+        $this->roleRepository = t3lib_div::makeInstance('Tx_Rbac_Domain_Repository_RoleRepository');
+        $this->feUserRepository = t3lib_div::makeInstance('Tx_Extbase_Domain_Repository_FrontendUserRepository');
+    }
+    
+    
+	
 	/**
 	 * Shows index action
 	 * 
@@ -176,6 +224,65 @@ class Tx_Rbac_Controller_AdminController extends Tx_Rbac_Controller_AbstractCont
         t3lib_div::makeInstance(Tx_Extbase_Persistence_Manager)->persistAll();
         $this->flashMessages->add('Role ' . $role->getName() . ' has been removed from user.');
         $this->forward('editUser');
+	}
+	
+	
+	
+	/**
+	 * Setup for RBAC. Sets up all rbac settings for this extension
+	 *
+	 * @return string Rendered setup action
+	 */
+	public function setupRbacAction() {
+		// Get extension object for RBAC extension
+		$extension = $this->extensionRepository->findOrCreateExtension('tx_yag');
+        $rbacTsImporter = Tx_Rbac_Domain_TsImporterFactory::getInstanceByExtension($extension);
+		
+		// Import TS-Setup for RBAC
+		$tsArray = $this->settings['rbac'];
+		$rbacTsImporter->importTsArray($tsArray);
+
+		// Find fe users and rbac roles
+		$feUsersQuery = $this->feUserRepository->createQuery();
+		$feUsersQuery->getQuerySettings()->setRespectStoragePage(FALSE);
+		$feUsers = $feUsersQuery->execute();
+		$roles = $this->roleRepository->findAll();
+		
+		// Render Form for adding RBAC admin user
+		$this->view->assign('tsImported', 1);
+		$this->view->assign('feUsers', $feUsers);
+		$this->view->assign('roles', $roles);
+	}
+	
+	
+	
+	/**
+	 * Adds a new rbac user for given feUser and role
+	 *
+	 * @param Tx_Extbase_Domain_Model_FrontendUser $feUser
+	 * @param Tx_Rbac_Domain_Model_Role $role
+	 */
+	public function addRbacUserAction(Tx_Extbase_Domain_Model_FrontendUser $feUser, Tx_Rbac_Domain_Model_Role $role) {
+		// Make sure, only one rbac user exists for feUser
+		$rbacUser = null;
+		if (count($this->userRepository->findByFeUser($feUser)) > 0) {
+			print_r('user bereits angelegt, wird geladen');
+			$rbacUsers = $this->userRepository->findByFeUser($feUser);
+			$rbacUser = $rbacUsers[0];
+            $rbacUser->setFeUser($feUser);
+            $rbacUser->addRole($role);
+			$this->userRepository->update($rbacUser);
+		} else {
+			print_r('neuer User wird angelegt');
+		    $rbacUser = new Tx_Rbac_Domain_Model_User();
+			$rbacUser->setFeUser($feUser);
+			$rbacUser->addRole($role);
+		    $this->userRepository->add($rbacUser);
+		}
+		
+		// Give some feedback
+		$this->view->assign('feUser', $feUser);
+		$this->view->assign('role', $role);
 	}
 	
 	

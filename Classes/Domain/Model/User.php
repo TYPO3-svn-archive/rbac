@@ -60,6 +60,15 @@ class Tx_Rbac_Domain_Model_User extends Tx_Extbase_DomainObject_AbstractEntity {
 	
 	
 	/**
+	 * Initializes object
+	 */
+	public function __construct() {
+		$this->roles = new Tx_Extbase_Persistence_ObjectStorage();
+	}
+	
+	
+	
+	/**
 	 * @param Tx_Extbase_Domain_Model_FrontendUser $feUser
 	 */
 	public function setFeUser(Tx_Extbase_Domain_Model_FrontendUser $feUser) {

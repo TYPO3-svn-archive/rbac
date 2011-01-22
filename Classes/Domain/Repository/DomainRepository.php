@@ -32,9 +32,45 @@
  */
 class Tx_Rbac_Domain_Repository_DomainRepository extends Tx_Extbase_Persistence_Repository {
 	
+	/**
+	 * Adds a domain to repository if it does not exist. Else updates it.
+	 *
+	 * @param Tx_Rbac_Domain_Model_Domain $domain
+	 */
+	public function addIfNotExists(Tx_Rbac_Domain_Model_Domain $domain) {
+		if (!(count($this->findByExtensionAndName($domain->getExtension(), $domain->getName())))) {
+			$this->add($domain);
+		} else {
+			$this->update($domain);
+		}
+	}
+	
+	
+	
+	/**
+	 * Finds domains for given extension and domain name
+	 *
+	 * @param Tx_Rbac_Domain_Model_Extension $extension
+	 * @param string $domainName
+	 * @return array<Tx_Rbac_Domain_Model_Domain>
+	 */
 	public function findByExtensionAndName(Tx_Rbac_Domain_Model_Extension $extension, $domainName) {
 		$query = $this->createQuery();
-		$result = $query->matching($query->logicalAnd($query->equals('extension', $extension), $query->equals('name', $domainName)))->execute();
+        $result = $query->matching($query->logicalAnd($query->equals('extension', $extension), $query->equals('name', $domainName)))->execute();
+        return $result;
+	}
+	
+	
+	
+	/**
+	 * Finds a domain by given extension and domain name
+	 *
+	 * @param Tx_Rbac_Domain_Model_Extension $extension
+	 * @param string $domainName
+	 * @return Tx_Rbac_Domain_Model_Extension
+	 */
+	public function findSingleInstanceByExtensionAndName(Tx_Rbac_Domain_Model_Extension $extension, $domainName) {
+		$result = $this->findByExtensionAndName($extension, $domainName);
 		if (count($result) == 1) return $result[0];
 		else throw new Exception('None or more than one Domain ('.count($result).') found by extension and name. This sould not be! 1295024087');
 	}
