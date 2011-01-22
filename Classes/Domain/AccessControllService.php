@@ -51,6 +51,18 @@ class Tx_Rbac_Domain_AccessControllService {
     
     
     /**
+     * TODO Constructor creates repository, what should be done in 
+     * a factory!
+     */
+    public function __construct() {
+    	// At the moment, we use this repository as a default repository (overwritten by injector for testing etc.)
+    	// TODO use factory here!
+    	$this->repository = t3lib_div::makeInstance(Tx_Rbac_Domain_Repository_UserRepository);
+    }
+    
+    
+    
+    /**
      * Returns true, if a given user has access to given object's action
      *
      * @param int $userUid Uid of user to request access rights for
