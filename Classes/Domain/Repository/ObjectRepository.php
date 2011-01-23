@@ -41,7 +41,7 @@ class Tx_Rbac_Domain_Repository_ObjectRepository extends Tx_Extbase_Persistence_
 	 */
 	public function findSingleInstanceByExtensionAndName(Tx_Rbac_Domain_Model_Extension $extension, $name) {
 		$query = $this->createQuery();
-		$query->matching($query->logicalAnd($query->equals('extension', $extension), $query->equals('name', $name)));
+		$query->matching($query->logicalAnd($query->equals('extension', $extension->getUid()), $query->equals('name', $name)));
 		$result = $query->execute();
 		if (count($result) > 1) throw new Exception('More than one object found for query settings. This should not be! 1295024084');
 		return count($result) == 1 ? $result[0] : null;
@@ -55,10 +55,12 @@ class Tx_Rbac_Domain_Repository_ObjectRepository extends Tx_Extbase_Persistence_
 	 * @param Tx_Rbac_Domain_Model_Object $object
 	 */
 	public function addIfNotExists(Tx_Rbac_Domain_Model_Object $object) {
-		if (!($this->findByExtensionAndName($object->getExtension(), $object->getName())) > 0) {
+		print_r($object->getName());
+		print_r($object->getExtension()->getUid());
+		print_r(count($this->findByExtensionAndName($object->getExtension()->getUid(), $object->getName())));
+		if (!(count($this->findByExtensionAndName($object->getExtension()->getUid(), $object->getName())) > 0)) {
+			print_r('Adding object');
 			$this->add($object);
-		} else {
-			$this->update($object);
 		}
 	}
 	
@@ -67,14 +69,14 @@ class Tx_Rbac_Domain_Repository_ObjectRepository extends Tx_Extbase_Persistence_
 	/**
 	 * Finds objects by given extension and object name
 	 *
-	 * @param Tx_Rbac_Domain_Model_Extension $extension
+	 * @param int $extensionUid
 	 * @param string $objectName
 	 * @return array<Tx_Rbac_Domain_Model_Object> Array of Tx_Rbac_Domain_Model_Object
 	 */
-	public function findByExtensionAndName(Tx_Rbac_Domain_Model_Extension $extension, $objectName) {
+	public function findByExtensionAndName($extensionUid, $objectName) {
 		$query = $this->createQuery();
 		$query->getQuerySettings()->setRespectStoragePage(FALSE);
-		$query->matching($query->logicalAnd($query->equals('extension', $extension), $query->equals('name', $objectName)));
+		$query->matching($query->logicalAnd($query->equals('extension', $extensionUid), $query->equals('name', $objectName)));
 		return $query->execute();
 	}
 	

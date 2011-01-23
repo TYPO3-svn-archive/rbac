@@ -55,7 +55,11 @@ class Tx_Rbac_Domain_Repository_PrivilegeRepository extends Tx_Extbase_Persisten
 		if (!(count($this->findByName($privilege->getName())) > 0)) {
 			$this->add($privilege);
 		} else {
-			$this->update($privilege);
+			$existingPrivileges = $this->findByName($privilege->getName());
+			$existingPrivilege = $existingPrivileges[0]; /* @var $existingPrivilege Tx_Rbac_Domain_Model_Privilege */
+			$existingPrivilege->setActions($privilege->getActions());
+			$existingPrivilege->setIsSingular($privilege->isIsSingular());
+			$this->update($existingPrivilege);
 		}
 	}
 	

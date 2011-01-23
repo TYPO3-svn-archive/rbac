@@ -41,7 +41,12 @@ class Tx_Rbac_Domain_Repository_RoleRepository extends Tx_Extbase_Persistence_Re
 		if (!(count($this->findByName($role->getName())) > 0)) {
 			$this->add($role);
 		} else {
-			$this->update($role);
+			$existingRoles = $this->findByName($role->getName());
+			$existingRole = $existingRoles[0]; /* @var $existingRole Tx_Rbac_Domain_Model_Role */
+			$existingRole->setImportance($role->getImportance());
+			$existingRole->setUsers($role->getUsers());
+			$existingRole->setDescription($role->getDescription());
+			$this->update($existingRole);
 		}
 	}
 	

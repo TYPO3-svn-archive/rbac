@@ -31,6 +31,33 @@
  * @author Michael Knoll <mimi@kaktusteam.de>
  */
 class Tx_Rbac_Domain_Repository_PrivilegeOnDomainRepository extends Tx_Extbase_Persistence_Repository {
+
+	/**
+	 * Finds privilege on domain objects for given role, privilege and domain
+	 *
+	 * @param Tx_Rbac_Domain_Model_Role $role
+	 * @param Tx_Rbac_Domain_Model_Privilege $privilege
+	 * @param Tx_Rbac_Domain_Model_Domain $domain
+	 */
+	public function findByRoleAndPrivilegeAndDomain(Tx_Rbac_Domain_Model_Role $role, Tx_Rbac_Domain_Model_Privilege $privilege, Tx_Rbac_Domain_Model_Domain $domain) {
+		$query = $this->createQuery();
+		$query->getQuerySettings()->setRespectStoragePage(FALSE);
+		$query->matching($query->logicalAnd($query->logicalAnd($query->equals('role', $role), $query->equals('privilege', $privilege)), $query->equals('domain', $domain)));
+		return $query->execute();
+	}
+	
+	
+	
+	/**
+	 * Adds a given privilege on domain if it does not exist yet. (Compared by privilege, role and domain)
+	 *
+	 * @param Tx_Rbac_Domain_Model_PrivilegeOnDomain $privilegeOnDomain
+	 */
+	public function addIfNotExists(Tx_Rbac_Domain_Model_PrivilegeOnDomain $privilegeOnDomain) {
+		if (!(count($this->findByRoleAndPrivilegeAndDomain($privilegeOnDomain->getRole(), $privilegeOnDomain->getPrivilege(), $privilegeOnDomain->getDomain())) > 0)) {
+			$this->add($privilegeOnDomain);
+		}
+	}
 	
 }
  

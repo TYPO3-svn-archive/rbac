@@ -217,7 +217,6 @@ class Tx_Rbac_Domain_TsImporter {
 	 * @param array $tsArray
 	 */
 	public function importActionByNameAndTsArray($actionName, $tsArray) {
-		// TODO make sure, action is not inserted twice (by the same name)
 		$actionObject = new Tx_Rbac_Domain_Model_Action();
 		$actionObject->setName($actionName);
 		$actionObject->setDescription($tsArray['description']);
@@ -233,7 +232,13 @@ class Tx_Rbac_Domain_TsImporter {
 	 * @param array $tsArray
 	 */
 	public function importObjectByNameAndTsArray($objectName, $tsArray) {
-		$objectObject = new Tx_Rbac_Domain_Model_Object();
+		$existingObjects = $this->objectRepository->findByExtensionAndName($this->extension, $objectName);
+		$objectObject = null;
+		if (count($existingObjects) > 0) {
+			$objectObject = $existingObjects[0];
+		} else {
+			$objectObject = new Tx_Rbac_Domain_Model_Object();
+		}
 		$objectObject->setName($objectName);
 		$objectObject->setDescription($tsArray['description']);
 		$objectObject->setExtension($this->extension);
@@ -250,7 +255,13 @@ class Tx_Rbac_Domain_TsImporter {
 	 * @param array $tsArray
 	 */
 	public function importDomainByNameAndTsArray($domainName, $tsArray) {
-		$domainObject = new Tx_Rbac_Domain_Model_Domain();
+		$existingDomains = $this->domainRepository->findByExtensionAndName($this->extension, $domainName);
+		$domainObject = null;
+		if (count($existingDomains) > 0) {
+			$domainObject = $existingDomains[0];
+		} else {
+		    $domainObject = new Tx_Rbac_Domain_Model_Domain();
+		}
 		$domainObject->setName($domainName);
 		$domainObject->setDescription($tsArray['description']);
 		$domainObject->setExtension($this->extension);
@@ -276,7 +287,13 @@ class Tx_Rbac_Domain_TsImporter {
 	public function importPrivilegeByNameAndTsArray($privilegeName, $tsArray) {
 		// TODO make sure, privilege is not inserted twice (perhaps we need to add an extension?)
 		// At the moment, this is done via extension-prefix in privilege name, which should be removed
-		$privilegeObject = new Tx_Rbac_Domain_Model_Privilege();
+		$existingPrivileges = $this->privilegeRepository->findByName($privilegeName);
+		$privilegeObject = null;
+		if (count($existingPrivileges) > 0) {
+			$privilegeObject = $existingPrivileges[0];
+		} else {
+		    $privilegeObject = new Tx_Rbac_Domain_Model_Privilege();
+		} 
 		$privilegeObject->setName($privilegeName);
 		$actionNames = explode(',', $tsArray['actions']);
 		foreach ($actionNames as $actionName) {
@@ -296,8 +313,13 @@ class Tx_Rbac_Domain_TsImporter {
 	 * @param array $tsArray
 	 */
 	public function importRoleByNameAndTsArray($roleName, $tsArray) {
-		// TODO make sure, role is not inserted twice
-		$roleObject = new Tx_Rbac_Domain_Model_Role();
+		$existingRoles = $this->roleRepository->findByName($roleName);
+		$roleObject = null;
+		if (count($existingRoles) > 0) {
+			$roleObject = $existingRoles[0];
+		} else {
+			$roleObject = new Tx_Rbac_Domain_Model_Role();
+		}
 		$roleObject->setName($roleName);
 		$roleObject->setDescription($tsArray['description']);
 		$roleObject->setImportance($tsArray['importance']);
@@ -317,12 +339,20 @@ class Tx_Rbac_Domain_TsImporter {
 	 * @return Tx_Rbac_Domain_Model_PrivilegeOnDomain
 	 */
 	protected function importPrivilegeOnDomainByRoleAndTsArray(Tx_Rbac_Domain_Model_Role $role, $tsArray) {
-		$privilegeOnDomainObject = new Tx_Rbac_Domain_Model_PrivilegeOnDomain();
+		$privilege = $this->privilegeRepository->findSingleInstanceByName($tsArray['privilege']);
+		$domain = $this->domainRepository->findSingleInstanceByExtensionAndName($this->extension, $tsArray['domain']);
+		$existingPrivilegesOnDomain = $this->privilegeOnDomainRepository->findByRoleAndPrivilegeAndDomain($role, $privilege, $domain);
+		$privilegeOnDomainObject = null;
+		if (count($existingPrivilegesOnDomain) > 0) {
+			$privilegeOnDomainObject = $existingPrivilegesOnDomain[0];
+		} else {
+		    $privilegeOnDomainObject = new Tx_Rbac_Domain_Model_PrivilegeOnDomain();
+		}
 		$privilegeOnDomainObject->setIsAllowed($tsArray['isAllowed'] == '1');
 		$privilegeOnDomainObject->setRole($role);
-		$privilegeOnDomainObject->setPrivilege($this->privilegeRepository->findSingleInstanceByName($tsArray['privilege']));
-		$privilegeOnDomainObject->setDomain($this->domainRepository->findSingleInstanceByExtensionAndName($this->extension, $tsArray['domain']));
-		$this->privilegeOnDomainRepository->add($privilegeOnDomainObject);
+		$privilegeOnDomainObject->setPrivilege($privilege);
+		$privilegeOnDomainObject->setDomain($domain);
+		$this->privilegeOnDomainRepository->addIfNotExists($privilegeOnDomainObject);
 		return $privilegeOnDomainObject;
 	}
 	

@@ -41,7 +41,11 @@ class Tx_Rbac_Domain_Repository_DomainRepository extends Tx_Extbase_Persistence_
 		if (!(count($this->findByExtensionAndName($domain->getExtension(), $domain->getName())))) {
 			$this->add($domain);
 		} else {
-			$this->update($domain);
+			$existingDomains = $this->findByExtensionAndName($domain->getExtension(), $domain->getName());
+			$existingDomain = $existingDomains[0]; /* @var $existingDomain Tx_Rbac_Domain_Model_Domain */
+			$existingDomain->setIsSingular($domain->isIsSingular());
+			$existingDomain->setObjects($domain->getObjects());
+			$this->update($existingDomain);
 		}
 	}
 	
