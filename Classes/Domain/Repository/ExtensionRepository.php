@@ -40,9 +40,10 @@ class Tx_Rbac_Domain_Repository_ExtensionRepository extends Tx_Extbase_Persisten
 	 */
 	public function findOrCreateExtension($extensionName) {
 		$query = $this->createQuery();
+		$query->getQuerySettings()->setRespectStoragePage(FALSE);
 		$result = $query->matching($query->equals('name', $extensionName))->execute();
-		if (!is_array($result) && method_exists('getName', $result) && $result->getName() == $extensionName) {
-			return $result;
+		if (is_array($result) && count($result) > 0) {
+			return $result[0];
 		} else {
 			$extension = new Tx_Rbac_Domain_Model_Extension();
 			$extension->setName($extensionName);
