@@ -80,7 +80,7 @@ class Tx_Rbac_Domain_AccessControllService implements Tx_PtExtlist_Domain_StateA
 	 *
 	 * @param array $sessionData
 	 */
-	public function injectSessionData(array $sessionData = array()) {
+	public function injectSessionData(array $sessionData) {
 		$this->accessCache = $sessionData['accessCache'];
 	}
 	
