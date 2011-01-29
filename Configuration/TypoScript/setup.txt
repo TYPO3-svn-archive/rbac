@@ -251,7 +251,11 @@ plugin.tx_rbac.settings {
                         renderObj {
                             10 = TEXT
                             10.value = Edit
+<<<<<<< HEAD
                             10.typolink.parameter = 5
+=======
+                            10.typolink.parameter.data = TSFE:id
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
                             10.typolink.additionalParams.dataWrap = &tx_rbac_pi1[controller]=Admin&tx_rbac_pi1[action]=editUser&tx_rbac_pi1[user]={field:uid}
                         }
                         

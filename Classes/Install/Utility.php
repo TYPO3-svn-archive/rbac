@@ -80,6 +80,7 @@ class Tx_Rbac_Install_Utility {
                action = list
            }
         
+<<<<<<< HEAD
         }
         
         # Required for requestBuilder
@@ -110,6 +111,10 @@ class Tx_Rbac_Install_Utility {
         }';
     
     
+=======
+        }';
+
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
     
     /**
      * Runs an import of rbac settings for given extensionname, absolute path of TS file on server,
@@ -147,12 +152,17 @@ class Tx_Rbac_Install_Utility {
             self::$extBaseSettings = Tx_Extbase_Utility_TypoScript::convertTypoScriptArrayToPlainArray($typoScriptParser->setup);
             
             // We set up a dispatcher to create dependencies for repositories etc.
+<<<<<<< HEAD
             $dispatcher = new Tx_Extbase_Dispatcher();
             try {
                 $dispatcher->dispatch('content', self::$extBaseSettings);
             } catch (Exception $e) {
                 // We get an exception and don't care                
             }
+=======
+            $extbaseCore = new Tx_Extbase_Core_Bootstrap();
+            $extbaseCore->initialize(self::$extBaseSettings);
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
             
             // We set up rbac importer and import ts settings into database
             $extension = t3lib_div::makeInstance('Tx_Rbac_Domain_Repository_ExtensionRepository')->findOrCreateExtension($extensionName);

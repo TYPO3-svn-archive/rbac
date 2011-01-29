@@ -266,14 +266,20 @@ class Tx_Rbac_Controller_AdminController extends Tx_Rbac_Controller_AbstractCont
 		// Make sure, only one rbac user exists for feUser
 		$rbacUser = null;
 		if (count($this->userRepository->findByFeUser($feUser)) > 0) {
+<<<<<<< HEAD
 			print_r('user bereits angelegt, wird geladen');
+=======
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
 			$rbacUsers = $this->userRepository->findByFeUser($feUser);
 			$rbacUser = $rbacUsers[0];
             $rbacUser->setFeUser($feUser);
             $rbacUser->addRole($role);
 			$this->userRepository->update($rbacUser);
 		} else {
+<<<<<<< HEAD
 			print_r('neuer User wird angelegt');
+=======
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
 		    $rbacUser = new Tx_Rbac_Domain_Model_User();
 			$rbacUser->setFeUser($feUser);
 			$rbacUser->addRole($role);

@@ -26,6 +26,11 @@
 /**
  * Class implements an access-controll service for
  * Role-Based Access Controll
+<<<<<<< HEAD
+=======
+ * 
+ * Please mind convention: IF WE ARE IN BACKEND MODE - WE HAVE ACCESS TO EVERYTHING!
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
  *
  * @package Domain
  * @author Michael Knoll <mimi@kaktusteam.de>
@@ -51,6 +56,18 @@ class Tx_Rbac_Domain_AccessControllService implements Tx_PtExtlist_Domain_StateA
     
     
     /**
+<<<<<<< HEAD
+=======
+     * Holds an instance of rbac user repository
+     *
+     * @var Tx_Rbac_Domain_Repository_UserRepository
+     */
+    protected $rbacUserRepository;
+    
+    
+    
+    /**
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
      * Holds an array of cached access rights which is
      * persisted to session after access controll service shuts down.
      * 
@@ -63,6 +80,36 @@ class Tx_Rbac_Domain_AccessControllService implements Tx_PtExtlist_Domain_StateA
     protected $accessCache;
     
     
+<<<<<<< HEAD
+=======
+    
+    /**
+     * Holds fe user object of logged in user
+     *
+     * @var Tx_Extbase_Domain_Model_FrontendUser
+     */
+    protected $feUser = null;
+    
+    
+    
+    /**
+     * Holds rbac user for logged in fe user
+     *
+     * @var Tx_Rbac_Domain_Model_User
+     */
+    protected $rbacUser = null;
+    
+    
+    
+    /**
+     * Holds an instance of extbase reflection service
+     *
+     * @var Tx_Extbase_Reflection_Service
+     */
+    protected $reflectionService;
+    
+    
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
 	
 	/**
 	 * @see Tx_PtExtlist_Domain_StateAdapter_IdentifiableInterface::getObjectNamespace()
@@ -87,6 +134,21 @@ class Tx_Rbac_Domain_AccessControllService implements Tx_PtExtlist_Domain_StateA
 	
 	
 	/**
+<<<<<<< HEAD
+=======
+	 * Injector for fe user
+	 *
+	 * @param Tx_Extbase_Domain_Model_FrontendUser $feUser
+	 */
+	public function injectFeUser(Tx_Extbase_Domain_Model_FrontendUser $feUser) {
+		$this->feUser = $feUser;
+		$this->rbacUser = $this->rbacUserRepository->findByFeUser($feUser);
+	}
+	
+	
+	
+	/**
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
 	 * @see Tx_PtExtlist_Domain_StateAdapter_SessionPersistableInterface::persistToSession()
 	 *
 	 */
@@ -97,13 +159,18 @@ class Tx_Rbac_Domain_AccessControllService implements Tx_PtExtlist_Domain_StateA
     
     
     /**
+<<<<<<< HEAD
      * Returns true, if a given user has access to given object's action
+=======
+     * Returns true, if a given rbac user uid has access to given object's action
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
      *
      * @param int $userUid Uid of RBAC! user (not fe_user!!!) to request access rights for
      * @param string $object Object to request access rights for
      * @param string $action Action to request access rights for
      * @return bool True, if given user has access to given object and action
      */
+<<<<<<< HEAD
     public function hasAccess($user, $object, $action) {
         if (!isset($this->accessCache[$user][$object][$action])) {
         	// We have no cached access right for requested user, object and action so we create one
@@ -112,6 +179,20 @@ class Tx_Rbac_Domain_AccessControllService implements Tx_PtExtlist_Domain_StateA
         
         // We have cached access right, so we can return from cache
         if ($this->accessCache[$user][$object][$action]) {
+=======
+    public function userUidHasAccess($userUid, $objectName, $actionName) {
+    	#print_r("in uiserUIdHasAccess $userUid - objectName: $objectName - actionName: $actionName");
+        if (TYPO3_MODE === 'BE') {
+            return TRUE;
+        }
+        if (!isset($this->accessCache[$userUid][$objectName][$actionName])) {
+        	// We have no cached access right for requested user, object and action so we create one
+        	$this->accessCache[$userUid][$objectName][$actionName] = $this->getAccessRightFromDatabase($userUid,$objectName,$actionName);
+        }
+        
+        // We have cached access right, so we can return from cache
+        if ($this->accessCache[$userUid][$objectName][$actionName]) {
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
             return TRUE;	
         } else {
         	return FALSE;
@@ -121,6 +202,75 @@ class Tx_Rbac_Domain_AccessControllService implements Tx_PtExtlist_Domain_StateA
     
     
     /**
+<<<<<<< HEAD
+=======
+     * Returns true, if a given rbac user has access to given object and action
+     *
+     * @param Tx_Rbac_Domain_Model_User $rbacUser
+     * @param string $objectName Name of object
+     * @param string $actionName Name of action
+     * @return bool True, if given user has access to given object and action
+     */
+    public function rbacUserHasAccess(Tx_Rbac_Domain_Model_User $rbacUser, $objectName, $actionName) {
+        if (TYPO3_MODE === 'BE') {
+            return TRUE;
+        }
+    	return $this->userUidHasAccess($rbacUser->getUid(), $objectName, $actionName);
+    }
+    
+    
+    
+    /**
+     * Returns true, if currently logged in user has access to given object and action
+     *
+     * @param string $objectName
+     * @param string $actionName
+     * @return bool True, if logged in user has access to given object and action
+     */
+    public function loggedInUserHasAccess($objectName, $actionName) {
+        if (TYPO3_MODE === 'BE') {
+            return TRUE;
+        }
+    	if ($this->feUser !== null) {
+    	   return $this->userUidHasAccess($this->rbacUser->getUid(), $objectName, $actionName);
+    	} elseif(false) {
+    		// implement backend case!
+    	} 
+    	return false;
+    }
+    
+    
+    
+    /**
+     * Returns true, if logged in user has access to given controller and action
+     *
+     * @param string $controllerName Name of controller to check access rights for
+     * @param string $actionName Name of action to check access rights for
+     * @return bool True, if logged in user has access to given action on controller
+     */
+    public function loggedInUserHasAccessToControllerAndAction($controllerName, $actionName) {
+        if (TYPO3_MODE === 'BE') {
+            return TRUE;
+        }
+    	$methodTags = $this->reflectionService->getMethodTagsValues($controllerName, $actionName);
+    	if (array_key_exists('rbacNeedsAccess', $methodTags)) {
+            if ($this->rbacUser) {
+                $rbacObject = $methodTags['rbacObject'][0];
+                $rbacAction = $methodTags['rbacAction'][0];
+                return $this->userUidHasAccess($this->rbacUser->getUid(), $rbacObject, $rbacAction);
+            } else {
+            	// Access restrictions and no user --> return false
+            	return false;
+            }
+    	} 
+    	// No access restrictions --> return true
+    	return true;
+    }
+    
+    
+    
+    /**
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
      * Executes a SQL-query to gather access-information from database
      *
      * @param int $userUid Uid of RBAC! user (not fe_user!!!) to request access rights for
@@ -187,6 +337,31 @@ class Tx_Rbac_Domain_AccessControllService implements Tx_PtExtlist_Domain_StateA
     public function getRepository() {
     	return $this->repository;
     }
+<<<<<<< HEAD
+=======
+    
+    
+    
+    /**
+     * Injector for rbac user repository
+     *
+     * @param Tx_Rbac_Domain_Repository_UserRepository $rbacUserRepository
+     */
+    public function injectRbacUserRepository(Tx_Rbac_Domain_Repository_UserRepository $rbacUserRepository) {
+    	$this->rbacUserRepository = $rbacUserRepository;
+    }
+    
+    
+    
+    /**
+     * Injector for reflection service
+     *
+     * @param Tx_Extbase_Reflection_Service $reflectionService
+     */
+    public function injectReflectionService(Tx_Extbase_Reflection_Service $reflectionService) {
+    	$this->reflectionService = $reflectionService;
+    }
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
 
 }
  

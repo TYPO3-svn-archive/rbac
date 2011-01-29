@@ -32,6 +32,24 @@
  */
 class Tx_Rbac_Domain_Repository_UserRepository extends Tx_Extbase_Persistence_Repository {
 	
+<<<<<<< HEAD
+=======
+	/**
+	 * Returns rbac user for given fe user object
+	 *
+	 * @param Tx_Extbase_Domain_Model_FrontendUser $feUser
+	 * return Tx_Rbac_Domain_Model_User
+	 */
+	public function findByFeUser(Tx_Extbase_Domain_Model_FrontendUser $feUser) {
+		$query = $this->createQuery();
+        $query->getQuerySettings()->setRespectStoragePage(FALSE);
+        $query->matching($query->equals('feUser', $feUser->getUid()));
+        $rbacUserArray = $query->execute();
+        return count($rbacUserArray) > 0 ? $rbacUserArray[0] : null;
+	}
+	
+	
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
 }
  
 ?>

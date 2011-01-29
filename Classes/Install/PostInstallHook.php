@@ -23,6 +23,13 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/ 
 
+<<<<<<< HEAD
+=======
+// We need those lines, if extension is first installed (no autoload is running here!)
+require_once t3lib_extMgm::extPath('rbac') . 'Classes/Install/Utility.php';
+require_once t3lib_extMgm::extPath('pt_extlist') . 'Classes/Utility/NameSpace.php';
+
+>>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
 /**
  * Hook that is executed after extension has been installed.
  * 
