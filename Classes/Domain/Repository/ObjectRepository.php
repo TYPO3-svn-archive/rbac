@@ -55,12 +55,6 @@ class Tx_Rbac_Domain_Repository_ObjectRepository extends Tx_Extbase_Persistence_
 	 * @param Tx_Rbac_Domain_Model_Object $object
 	 */
 	public function addIfNotExists(Tx_Rbac_Domain_Model_Object $object) {
-<<<<<<< HEAD
-		print_r($object->getName());
-		print_r($object->getExtension()->getUid());
-		print_r(count($this->findByExtensionAndName($object->getExtension()->getUid(), $object->getName())));
-=======
->>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
 		if (!(count($this->findByExtensionAndName($object->getExtension()->getUid(), $object->getName())) > 0)) {
 			print_r('Adding object');
 			$this->add($object);

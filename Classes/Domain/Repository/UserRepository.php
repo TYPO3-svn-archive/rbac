@@ -32,8 +32,6 @@
  */
 class Tx_Rbac_Domain_Repository_UserRepository extends Tx_Extbase_Persistence_Repository {
 	
-<<<<<<< HEAD
-=======
 	/**
 	 * Returns rbac user for given fe user object
 	 *
@@ -49,7 +47,6 @@ class Tx_Rbac_Domain_Repository_UserRepository extends Tx_Extbase_Persistence_Re
 	}
 	
 	
->>>>>>> aac898ba004322cc78a8f76f4a08bfdc086df3ea
 }
  
 ?>
