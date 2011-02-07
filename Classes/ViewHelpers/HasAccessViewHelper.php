@@ -22,7 +22,7 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-
+ 
 /**
  * Class implements an access viewhelper for RBAC
  * 
