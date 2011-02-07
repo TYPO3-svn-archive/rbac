@@ -18,7 +18,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'author_email' => 'mimi@kaktusteam.de',
 	'author_company' => 'MKLV GbR',
 	'shy' => '',
-	'dependencies' => 'cms,extbase,fluid',
+	'dependencies' => 'cms,extbase,fluid,pt_extlist',
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
@@ -35,6 +35,7 @@ $EM_CONF[$_EXTKEY] = array(
 			'cms' => '',
 			'extbase' => '',
 			'fluid' => '',
+            'pt_extlist' => ''
 		),
 		'conflicts' => array(
 		),
